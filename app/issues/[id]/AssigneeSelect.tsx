@@ -1,9 +1,9 @@
 "use client";
 import { Issue, User } from "@prisma/client";
 import { Callout, Select } from "@radix-ui/themes";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
