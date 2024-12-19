@@ -5,18 +5,28 @@ import IssueStatusBadge from "../../components/IssueStatusBadge";
 import Link from "../../components/Link";
 import IssueActions from "../IssueActions";
 import { Status } from "@prisma/client";
+import Pagination from "@/app/components/Pagination";
 
 const IssuesPage = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ status: Status }>;
+  searchParams: Promise<{ status: Status; page: string }>;
 }) => {
+  const page = parseInt((await searchParams).page) || 1;
+  const pageSize = 10;
   const issues = await prisma.issue.findMany({
     where: {
       status: (await searchParams).status,
     },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
   });
 
+  const issueCount = await prisma.issue.count({
+    where: {
+      status: (await searchParams).status,
+    },
+  });
   return (
     <div className="">
       <IssueActions />
@@ -52,6 +62,11 @@ const IssuesPage = async ({
           ))}
         </Table.Body>
       </Table.Root>
+      <Pagination
+        pageSize={pageSize}
+        currentPage={page}
+        itemCount={issueCount}
+      />
     </div>
   );
 };
